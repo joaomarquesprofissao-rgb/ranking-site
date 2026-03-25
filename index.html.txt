@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>CEM Ranking</title>
+
+<style>
+body {
+  background: #0b2c4d;
+  font-family: Arial;
+  color: white;
+  text-align: center;
+}
+
+.container {
+  background: #1b4f82;
+  padding: 20px;
+  border-radius: 10px;
+  width: 350px;
+  margin: auto;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+table {
+  margin-top: 20px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid white;
+  padding: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>CEM</h2>
+
+  <input id="nick" placeholder="Seu nick">
+  
+  <select id="atividade">
+    <option value="">Selecione</option>
+    <option value="elogio">Elogio</option>
+    <option value="promocao">Promoção</option>
+  </select>
+
+  <input id="comp" placeholder="Link da comprovação">
+
+  <button onclick="enviar()">Enviar</button>
+</div>
+
+<h2>Ranking</h2>
+<table id="tabela">
+  <tr>
+    <th>Data</th>
+    <th>Nick</th>
+    <th>Atividade</th>
+    <th>Pontos</th>
+  </tr>
+</table>
+
+<script>
+
+const API = "COLE_SEU_LINK_AQUI"; // ⚠️ COLOCA SEU LINK AQUI
+
+function pontos(atividade){
+  return atividade === "promocao" ? 15 : 5;
+}
+
+function enviar(){
+  fetch(API, {
+    method: "POST",
+    body: JSON.stringify({
+      nick: document.getElementById("nick").value,
+      atividade: document.getElementById("atividade").value,
+      comprovacao: document.getElementById("comp").value,
+      pontos: pontos(document.getElementById("atividade").value)
+    })
+  }).then(() => {
+    alert("Enviado!");
+    carregar();
+  });
+}
+
+async function carregar(){
+  let res = await fetch(API);
+  let dados = await res.json();
+
+  let tabela = document.getElementById("tabela");
+
+  // limpa tabela (menos o cabeçalho)
+  tabela.innerHTML = `
+    <tr>
+      <th>Data</th>
+      <th>Nick</th>
+      <th>Atividade</th>
+      <th>Pontos</th>
+    </tr>
+  `;
+
+  dados.slice(1).forEach(l => {
+    tabela.innerHTML += `
+      <tr>
+        <td>${l[0]}</td>
+        <td>${l[1]}</td>
+        <td>${l[2]}</td>
+        <td>${l[4]}</td>
+      </tr>
+    `;
+  });
+}
+
+carregar();
+
+</script>
+
+</body>
+</html>
