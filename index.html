@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>CEM Ranking</title>
+<title>CEM Envio</title>
 
 <style>
 body {
@@ -34,19 +34,6 @@ button {
   border: none;
   cursor: pointer;
 }
-
-table {
-  margin-top: 20px;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  border-collapse: collapse;
-}
-
-td, th {
-  border: 1px solid white;
-  padding: 8px;
-}
 </style>
 </head>
 
@@ -68,68 +55,49 @@ td, th {
   <button onclick="enviar()">Enviar</button>
 </div>
 
-<h2>Ranking</h2>
-<table id="tabela">
-  <tr>
-    <th>Data</th>
-    <th>Nick</th>
-    <th>Atividade</th>
-    <th>Pontos</th>
-  </tr>
-</table>
-
 <script>
 
-const API = "https://script.google.com/macros/s/AKfycbws30w1qw64FGXIyvG6pHPPeiQlxFow2CMjYR8hfwB522Ha99D-uj_0EysiQoUg21M1/exec"; // ⚠️ COLOCA SEU LINK AQUI
+const API = "https://script.google.com/macros/s/AKfycbws30w1qw64FGXIyvG6pHPPeiQlxFow2CMjYR8hfwB522Ha99D-uj_0EysiQoUg21M1/exec";
 
 function pontos(atividade){
-  return atividade === "promocao" ? 15 : 5;
+  if(atividade === "promocao") return 15;
+  if(atividade === "elogio") return 5;
+  return 0;
 }
 
 function enviar(){
+
+  const nick = document.getElementById("nick").value;
+  const atividade = document.getElementById("atividade").value;
+  const comp = document.getElementById("comp").value;
+
+  // validação simples
+  if(!nick || !atividade || !comp){
+    alert("Preencha todos os campos!");
+    return;
+  }
+
   fetch(API, {
     method: "POST",
+    mode: "no-cors", // 🔥 obrigatório pro GitHub Pages
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({
-      nick: document.getElementById("nick").value,
-      atividade: document.getElementById("atividade").value,
-      comprovacao: document.getElementById("comp").value,
-      pontos: pontos(document.getElementById("atividade").value)
+      nick: nick,
+      atividade: atividade,
+      comprovacao: comp,
+      pontos: pontos(atividade)
     })
-  }).then(() => {
-    alert("Enviado!");
-    carregar();
   });
+
+  alert("Enviado com sucesso!");
+
+  // limpar campos
+  document.getElementById("nick").value = "";
+  document.getElementById("atividade").value = "";
+  document.getElementById("comp").value = "";
 }
-
-async function carregar(){
-  let res = await fetch(API);
-  let dados = await res.json();
-
-  let tabela = document.getElementById("tabela");
-
-  // limpa tabela (menos o cabeçalho)
-  tabela.innerHTML = `
-    <tr>
-      <th>Data</th>
-      <th>Nick</th>
-      <th>Atividade</th>
-      <th>Pontos</th>
-    </tr>
-  `;
-
-  dados.slice(1).forEach(l => {
-    tabela.innerHTML += `
-      <tr>
-        <td>${l[0]}</td>
-        <td>${l[1]}</td>
-        <td>${l[2]}</td>
-        <td>${l[4]}</td>
-      </tr>
-    `;
-  });
-}
-
-carregar();
 
 </script>
 
