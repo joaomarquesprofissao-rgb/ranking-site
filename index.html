@@ -70,7 +70,7 @@ button:hover {
   <input id="nick" placeholder="Seu nick">
   
   <select id="atividade">
-    <option value="">Selecione</option>
+    <option value="">Escolha uma opção!</option>
     <option value="ajuda">Ajuda</option>
     <option value="tour">Tour</option>
     <option value="divulgacao">Divulgação (10 PRINTS)</option>
@@ -85,9 +85,9 @@ button:hover {
 const API = "https://script.google.com/macros/s/AKfycbws30w1qw64FGXIyvG6pHPPeiQlxFow2CMjYR8hfwB522Ha99D-uj_0EysiQoUg21M1/exec";
 
 function pontos(atividade){
-  if(atividade === "divulgacao") return 10;
-  if(atividade === "tour") return 5;
-  if(atividade === "ajuda") return 5;
+  if(atividade === "divulgacao") return 5;
+  if(atividade === "tour") return 2;
+  if(atividade === "ajuda") return 3;
   return 0;
 }
 
