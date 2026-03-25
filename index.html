@@ -2,37 +2,62 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>CEM Envio</title>
+<title>Relatório de Postagem - Ajudantes</title>
 
 <style>
 body {
-  background: #0b2c4d;
-  font-family: Arial;
+  background: #2b0b0b; /* fundo mais escuro vermelho */
+  font-family: Arial, sans-serif;
   color: white;
   text-align: center;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .container {
-  background: #1b4f82;
-  padding: 20px;
-  border-radius: 10px;
-  width: 350px;
-  margin: auto;
+  background: #8b1c1c; /* container vermelho escuro */
+  padding: 30px 25px;
+  border-radius: 12px;
+  width: 380px;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #ff4d4d; /* título vermelho claro */
 }
 
 input, select {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 12px;
+  margin: 12px 0;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+}
+
+input:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 5px #ff4d4d;
 }
 
 button {
   width: 100%;
-  padding: 10px;
-  background: #0d6efd;
+  padding: 12px;
+  background: #ff1a1a;
   color: white;
   border: none;
+  border-radius: 6px;
+  font-size: 16px;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #ff4d4d;
 }
 </style>
 </head>
@@ -40,14 +65,15 @@ button {
 <body>
 
 <div class="container">
-  <h2>CEM</h2>
+  <h2>Relatório de Postagem - Ajudantes</h2>
 
   <input id="nick" placeholder="Seu nick">
   
   <select id="atividade">
     <option value="">Selecione</option>
-    <option value="elogio">Elogio</option>
-    <option value="promocao">Promoção</option>
+    <option value="ajuda">Ajuda</option>
+    <option value="tour">Tour</option>
+    <option value="divulgacao">Divulgação (10 PRINTS)</option>
   </select>
 
   <input id="comp" placeholder="Link da comprovação">
@@ -56,22 +82,20 @@ button {
 </div>
 
 <script>
-
 const API = "https://script.google.com/macros/s/AKfycbws30w1qw64FGXIyvG6pHPPeiQlxFow2CMjYR8hfwB522Ha99D-uj_0EysiQoUg21M1/exec";
 
 function pontos(atividade){
-  if(atividade === "promocao") return 15;
-  if(atividade === "elogio") return 5;
+  if(atividade === "divulgacao") return 10;
+  if(atividade === "tour") return 5;
+  if(atividade === "ajuda") return 5;
   return 0;
 }
 
 function enviar(){
-
   const nick = document.getElementById("nick").value;
   const atividade = document.getElementById("atividade").value;
   const comp = document.getElementById("comp").value;
 
-  // validação simples
   if(!nick || !atividade || !comp){
     alert("Preencha todos os campos!");
     return;
@@ -79,7 +103,7 @@ function enviar(){
 
   fetch(API, {
     method: "POST",
-    mode: "no-cors", // 🔥 obrigatório pro GitHub Pages
+    mode: "no-cors",
     headers: {
       "Content-Type": "application/json"
     },
@@ -93,12 +117,10 @@ function enviar(){
 
   alert("Enviado com sucesso!");
 
-  // limpar campos
   document.getElementById("nick").value = "";
   document.getElementById("atividade").value = "";
   document.getElementById("comp").value = "";
 }
-
 </script>
 
 </body>
